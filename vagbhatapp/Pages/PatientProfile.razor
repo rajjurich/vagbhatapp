@@ -1,0 +1,38 @@
+﻿@inherits PatientProfileBase
+@page "/patientprofile/{id}"
+
+<div class="@DivCssClass">
+    @if (Patient == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <center>
+            <table class="table col-sm-10">
+                <thead>
+                    <tr>
+                        <th>Visited Date</th>
+                        <th>Complain</th>
+                        <th>Treatment</th>
+                        <th>Fees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appointment in Patient.Appointments)
+                    {
+                        @if (appointment.Treatment != null)
+                        {
+                            <tr>
+                                <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                                <td>@appointment.Treatment.Complain</td>
+                                <td>@appointment.Treatment.RxTreatment</td>
+                                <td>@appointment.Fees</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </center>
+    }
+</div>

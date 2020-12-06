@@ -1,0 +1,76 @@
+﻿@page "/fees"
+@inherits FeesBase
+    <div class="row">
+        <div class="col-sm-11">
+        </div>
+        <div class="col-sm-1 text-right">
+            <a href="/">Back</a>
+        </div>
+    </div>
+    <div class="col-md-8 m-auto">
+        <EditForm Model="FeesRequest" OnValidSubmit="SubmitForm">
+            <DataAnnotationsValidator />
+            <div class="form-group row">
+                <label for="fromDate" class="col-sm-2 col-form-label">
+                    From Date
+                </label>
+                <div class="col-sm-3">
+                    <InputDate id="fromDate" class="form-control" placeholder="To Date"
+                               @bind-Value="FeesRequest.FromDate" />
+                    <ValidationMessage For="@(()=>FeesRequest.FromDate)"></ValidationMessage>
+                </div>
+                <label for="toDate" class="col-sm-2 col-form-label">
+                    To Date
+                </label>
+                <div class="col-sm-3">
+                    <InputDate id="toDate" class="form-control" placeholder="To Date"
+                               @bind-Value="FeesRequest.ToDate" />
+                    <ValidationMessage For="@(()=>FeesRequest.ToDate)"></ValidationMessage>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn">Submit</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+    <div class="col-sm-10 m-auto text-sm-center">
+        <h4>@FeesRequest.FromDate.ToString("dd MMM yyyy") - @FeesRequest.ToDate.ToString("dd MMM yyyy")</h4>
+    </div>
+
+    @if (Patients == null)
+    {
+        
+    }
+    else
+    {
+        <center>
+            <table class="table col-sm-10">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Visit Date</th>
+                        <th>Fees</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in Patients)
+                    {
+
+                        <tr>
+                            <td><a href="/editpatient/@patient.PatientId">@patient.PatientName</a></td>
+                            <td>@(patient.NextAppointmentDate.ToString("dd MMM yyyy"))</td>
+                            <td>@patient.Fees</td>
+                        </tr>
+
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-sm-center h4">Total Fees : @TotalFees</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </center>
+    }
+
+

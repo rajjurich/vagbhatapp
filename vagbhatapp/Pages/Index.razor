@@ -1,0 +1,21 @@
+﻿@page "/"
+@inherits IndexBase
+
+<center>
+    <h2>Welcome to Vagbhat Ayurveda Clinic Application</h2>
+    <p style="text-decoration:underline">Please select your Task</p>
+</center>
+<div class="col-sm-2 m-auto">
+    <ul>
+        <li><a href="/addpatient">New Patient</a></li>
+        <li><a href="/patients">Search</a></li>
+        <li><a href="/fees">Fees Details</a></li>
+    </ul>
+
+</div>
+<center>
+    <h3>Today's Visitors</h3>
+    <button @onclick="ToggleVisibility">@VisibilityText</button>
+</center>
+
+    <Visitor Visible="@VisibilityText"></Visitor>

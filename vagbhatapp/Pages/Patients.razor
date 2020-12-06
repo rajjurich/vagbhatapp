@@ -1,0 +1,65 @@
+﻿@page "/patients"
+@inherits PatientsBase
+
+<div class="row">
+    <div class="col-sm-11">
+    </div>
+    <div class="col-sm-1 text-right">
+        <a href="/">Back</a>
+    </div>
+</div>
+<input @ref="searchPatientText" value="@Search" class="col-sm-6 form-control" placeholder="Search by name or number"
+       @oninput="OnSearchTextChanged" />
+<br />
+<div class="col-md-6">
+    @if (Patients == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @*<center>*@
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Patient Name</th>
+                    <th>Age</th>
+                    <th>Mobile Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int rn = PageNumber * PageSize + 1;}
+                @foreach (var patient in Patients)
+                {
+                    <tr>
+                        <td>@rn</td>
+                        <td><a href="/editpatient/@patient.PatientId">@patient.PatientName</a></td>
+                        <td>@patient.Age</td>
+                        <td>@patient.MobileNumber</td>
+                    </tr>
+                    rn = rn + 1;
+                }
+            </tbody>
+        </table>
+
+        <div class="col-md-8 m-auto">
+            <button class="btn @(TotalRecords==0?"collapse":"")" disabled="@(0==PageNumber)" @onclick="@(e => GetPatient(0))">First</button>
+            @{Start = PageNumber - 1 <= 0 ? 0 : PageNumber > TotalPages - 5 ? TotalPages - 5 < 0 ? 0 : TotalPages - 5 : PageNumber - 1;}
+            @for (int i = Start; i < @TotalPages; i++)
+            {
+
+                var page = i;
+                if (i < PageNumber + 5 - (PageNumber - 1 < 0 ? 0 : 1) && i > PageNumber - 5)
+                {
+                    <button class="btn" disabled="@(i==PageNumber)" @onclick="@(e => GetPatient(page))">@(i + 1)</button>
+                }
+            }
+            <button class="btn @(TotalRecords==0?"collapse":"")" disabled="@(TotalPages-1==PageNumber)" @onclick="@(e => GetPatient(TotalPages-1))">Last</button>
+
+        </div>
+
+        @*</center>*@
+    }
+</div>

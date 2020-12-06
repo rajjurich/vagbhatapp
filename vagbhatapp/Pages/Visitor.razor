@@ -1,0 +1,32 @@
+﻿@inherits VisitorBase
+<div class="@DivCssClass">
+    <br />
+    @if (Patients == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <center>
+            <table class="table col-sm-6">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Age</th>
+                        <th>Mobile Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in Patients)
+                    {
+                        <tr>
+                            <td><a href="/editpatient/@patient.PatientId">@patient.PatientName</a></td>
+                            <td>@patient.Age</td>
+                            <td>@patient.MobileNumber</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </center>
+    }
+</div>
