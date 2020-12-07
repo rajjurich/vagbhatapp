@@ -31,16 +31,17 @@ namespace vagbhatapp.Pages
         public IJSRuntime JSRuntime { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            DataTransform();
+            await DataTransform();
             await JSRuntime.InvokeVoidAsync("alertMessage", "Success");
             //return base.OnInitializedAsync();
         }
-        private void DataTransform()
+        private async Task DataTransform()
         {
             GetData gd = new GetData();
             var dt = gd.GetPatientData();
 
-            bool execute = Convert.ToBoolean(Configuration.GetSection("DTSExecute").Value);
+            bool execute = await PatientService.CountAsync() > 0 ? false : true;
+            
             if (execute)
             {
                 foreach (DataRow dr in dt.Rows)
@@ -57,7 +58,7 @@ namespace vagbhatapp.Pages
                         PatientName = dr["patient_name"].ToString()
                     };
 
-                    Patient createdPatient = PatientService.AddAsync(patient).Result;
+                    Patient createdPatient = await PatientService.AddAsync(patient);
 
                     var address = new Address
                     {
@@ -65,7 +66,7 @@ namespace vagbhatapp.Pages
                         FullAddress = dr["patient_address"].ToString()
                     };
 
-                    AddressService.AddAsync(address);
+                    await AddressService.AddAsync(address);
 
                     var aptdt = Convert.ToDateTime(Convert.ToDateTime(dr["patient_visit_date"].ToString())
                         .ToShortDateString());
@@ -77,7 +78,7 @@ namespace vagbhatapp.Pages
                         Fees = gd.GetFees(dr["patient_id"].ToString(), aptdt)
                     };
 
-                    Appointment createdAppointment = AppointmentService.AddAsync(appointment).Result;
+                    Appointment createdAppointment = await AppointmentService.AddAsync(appointment);
 
                     var treatment = new Treatment
                     {
@@ -86,7 +87,7 @@ namespace vagbhatapp.Pages
                         TreatmentId = createdAppointment.AppointmentId
                     };
 
-                    TreatmentService.AddAsync(treatment);
+                    await TreatmentService.AddAsync(treatment);
 
                     var dt1 = gd.GetPatientExData(dr["patient_id"].ToString());
                     foreach (DataRow dr1 in dt1.Rows)
@@ -113,7 +114,7 @@ namespace vagbhatapp.Pages
                                 TreatmentId = createdAppointment.AppointmentId
                             };
 
-                            TreatmentService.AddAsync(treatment);
+                            await TreatmentService.AddAsync(treatment);
                         }
                         else
                         {
@@ -122,10 +123,10 @@ namespace vagbhatapp.Pages
                                 AppointmentDate = aptdt,
                                 PatientId = createdPatient.PatientId
                             };
-                            AppointmentService.AddAsync(newAppointment);
+                            await AppointmentService.AddAsync(newAppointment);
                         }
                     }
-                    EntitiesContext.SaveChangesAsync();
+                    await EntitiesContext.SaveChangesAsync();
                 }
             }
         }
